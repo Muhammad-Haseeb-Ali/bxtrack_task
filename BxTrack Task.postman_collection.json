@@ -1,0 +1,478 @@
+{
+	"info": {
+		"_postman_id": "39391b0d-48f8-43f6-b0d0-900fe84dd8a1",
+		"name": "BxTrack Task",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15660124"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // super admin credentials\n    \"email\": \"user@mail.com\",\n    \"password\": \"user1234\"\n\n    // \"email\": \"admin4@gmail.com\",\n    // \"password\": \"admin1111\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"login"
+							]
+						},
+						"description": "#### **Login Endpoint**\n\n- **URL**: `/api/auth/login`\n- **Method**: `POST`\n    \n- **Description**: Authenticates a user admin and super admin. And returns a JWT.  \n      \n    **super admin credentials:**  \n    \"email\": \"superadmin@mail.com\",  \n    \"password\": \"super_admin\"  \n    \n- **Request Headers**: `Content-Type: application/json`\n    \n- **Request Body**:  \n    `{ \"email\": \"string\", \"password\": \"string\" }`\n    \n- **Response**:\n    \n    - **Status**: 200 OK\n    - \\*_Body:__\\*_`{ \"token\": \"JWT token\" }`\n    - **Error Responses**:\n        - **Status**: 401 Unauthorized  \n            `{ \"message\": \"Invalid credentials\" }`\n        - **Status**: 500 Internal Server Error  \n            `{ \"message\": \"Error message\" }`"
+					},
+					"response": []
+				},
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"user@mail.com\",\n    \"username\": \"user\",\n    \"password\": \"user1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"register"
+							]
+						},
+						"description": "#### **Registration Endpoint**\n\n- **URL**: `/api/auth/register`\n- **Method**: `POST`\n- **Description**: Registers a new user. Cannot be usaable for admin and super admin registeration.\n    \n- **Request Headers**:  \n    `Content-Type: application/json`\n- **Request Body**:`{ \"username\": \"string\", \"email\": \"string\", \"password\": \"string\", \"role\": \"string\" // Optional, only for admin users to assign roles }`\n- **Response**:\n    - **Status**: 201 Created\n    - **Body**:`{ \"message\": \"User registered successfully\" }`\n- **Error Responses:****Status**: 401 Unauthorized  \n    `{ \"message\": \"Invalid credentials\" }`  \n    **Status**: 500 Internal Server Error  \n    `{ \"message\": \"Error message\" }`"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "get-all-user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NWY2MGE2NzBjNWU5ODIzZDE2NjUyZSIsImlhdCI6MTcxNzUyNjcyOSwiZXhwIjoxNzE3NjEzMTI5fQ.atTUPlotk5HZ3Ay7HjT1uCzwTT12nRgdwTRxY8xmSTI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/profiles/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"profiles",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NWY2MGE2NzBjNWU5ODIzZDE2NjUyZSIsImlhdCI6MTcxNzUyNjcyOSwiZXhwIjoxNzE3NjEzMTI5fQ.atTUPlotk5HZ3Ay7HjT1uCzwTT12nRgdwTRxY8xmSTI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/profiles/users/665e03a1ed41ad4ca6878f62",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"profiles",
+								"users",
+								"665e03a1ed41ad4ca6878f62"
+							]
+						},
+						"description": "#### **User Details Retrieval Endpoint**\n\n- **URL**: `/api/users/profile`\n    \n- **Method**: `GET`\n    \n- **Description**: Retrieves the profile details of the authenticated user.\n    \n- **Request Headers**:\n    \n    - `Content-Type: application/json`\n        \n    - `Authorization: Bearer`\n        \n- **Request Body**: None\n    \n- **Response**:\n    \n    - **Status**: 200 OK\n        \n    - **Body**:  \n        `{   \"_id\": \"user_id\",   \"username\": \"string\",   \"email\": \"string\",   \"role\": {   \"_id\": \"role_id\",   \"name\": \"string\",   \"permissions\": [\"string\"]   }   }`  \n        \n    - **Error Responses**:\n        \n        - **Status**: 401 Unauthorized  \n            `{   \"message\": \"Token is not valid\"   }   `\n            \n        - **Status**: 500 Internal Server Error  \n            `{   \"message\": \"Error message\"   }`"
+					},
+					"response": []
+				},
+				{
+					"name": "post-user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NWY2MGE2NzBjNWU5ODIzZDE2NjUyZSIsImlhdCI6MTcxNzUyNjcyOSwiZXhwIjoxNzE3NjEzMTI5fQ.atTUPlotk5HZ3Ay7HjT1uCzwTT12nRgdwTRxY8xmSTI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"new use2r\",\n    \"email\": \"newemail.mai4l.com\",\n    \"password\": \"user1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/profiles/users/new",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"profiles",
+								"users",
+								"new"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update-user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NWRjNDBmYmQ0MTZlNWQ5MmQxZjI0ZCIsImlhdCI6MTcxNzQzNzQ4MiwiZXhwIjoxNzE3NTIzODgyfQ.bsyTGTkXjwttC91il2YZWNAeI96wgEukIpSB0zxPOCQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"haseeb new name\",\n    \"role\": \"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/profiles/users/665e0a310269e45ab950051f",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"profiles",
+								"users",
+								"665e0a310269e45ab950051f"
+							]
+						},
+						"description": "#### **User Details Update Endpoint**\n\n- **URL**: `/api/users/profile`\n    \n- **Method**: `PUT`\n    \n- **Description**: Updates the profile details of the authenticated user. Only users with the 'User' role can update their details.\n    \n- **Request Headers**:\n    \n    - `Content-Type: application/json`\n        \n    - `Authorization: Bearer`\n        \n- **Request Body**:  \n    `{   \"username\": \"string\", // Optional   \"email\": \"string\", // Optional   \"password\": \"string\" // Optional   }   `\n    \n- **Response**:\n    \n    - **Status**: 200 OK\n        \n    - **Body**:  \n        `{   \"message\": \"User updated successfully\"   }`  \n        \n    - **Error Responses**:\n        \n        - **Status**: 401 Unauthorized  \n            `{   \"message\": \"Token is not valid\"   }`\n            \n        - **Status**: 403 Forbidden  \n            `{   \"message\": \"Access denied\"   }`\n            \n        - **Status**: 404 Not Found  \n            `{   \"message\": \"User not found\"   }`\n            \n        - **Status**: 500 Internal Server Error  \n            `{   \"message\": \"Error message\"   }`"
+					},
+					"response": []
+				},
+				{
+					"name": "delete-user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NWRjNDBmYmQ0MTZlNWQ5MmQxZjI0ZCIsImlhdCI6MTcxNzQzNzQ4MiwiZXhwIjoxNzE3NTIzODgyfQ.bsyTGTkXjwttC91il2YZWNAeI96wgEukIpSB0zxPOCQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/profiles/users/665e0a310269e45ab950051f",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"profiles",
+								"users",
+								"665e0a310269e45ab950051f"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "admin",
+			"item": [
+				{
+					"name": "get-all-admin",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NWY2NGEyODA5ZmEzNTk1NmQxMDA3YSIsImlhdCI6MTcxNzUyNzc5MiwiZXhwIjoxNzE3NjE0MTkyfQ.cLeZCViWhIItI4pg3RkTKtftVcdHEKjSJngWBeVtNSI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/profiles/admins",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"profiles",
+								"admins"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-admin",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NWY2MGE2NzBjNWU5ODIzZDE2NjUyZSIsImlhdCI6MTcxNzUyNjcyOSwiZXhwIjoxNzE3NjEzMTI5fQ.atTUPlotk5HZ3Ay7HjT1uCzwTT12nRgdwTRxY8xmSTI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://localhost:3000/profiles/admins/665dce3fe2d0817b613248cc",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"profiles",
+								"admins",
+								"665dce3fe2d0817b613248cc"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "post-admin",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NWY2NGEyODA5ZmEzNTk1NmQxMDA3YSIsImlhdCI6MTcxNzUyNzc5MiwiZXhwIjoxNzE3NjE0MTkyfQ.cLeZCViWhIItI4pg3RkTKtftVcdHEKjSJngWBeVtNSI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"admin new\",\n    \"email\": \"admin@gmail.com\",\n    \"password\": \"admin1111\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/profiles/admins/new",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"profiles",
+								"admins",
+								"new"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update admin",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NWY2MGE2NzBjNWU5ODIzZDE2NjUyZSIsImlhdCI6MTcxNzUyNjcyOSwiZXhwIjoxNzE3NjEzMTI5fQ.atTUPlotk5HZ3Ay7HjT1uCzwTT12nRgdwTRxY8xmSTI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"haseeb ---\",\n    \"email\": \"ali@mail.com\",\n    \"password\": \"123\",\n    \"role\": \"asad\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/profiles/admin/665e160a1d062c0c8dab9d57",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"profiles",
+								"admin",
+								"665e160a1d062c0c8dab9d57"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete admin",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NWY2NGEyODA5ZmEzNTk1NmQxMDA3YSIsImlhdCI6MTcxNzUyNzc5MiwiZXhwIjoxNzE3NjE0MTkyfQ.cLeZCViWhIItI4pg3RkTKtftVcdHEKjSJngWBeVtNSI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"haseeb ---\",\n    \"email\": \"ali@mail.com\",\n    \"password\": \"123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/profiles/admin/665ed4648c2f53a176fdf254",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"profiles",
+								"admin",
+								"665ed4648c2f53a176fdf254"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "health check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/health",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"health"
+					]
+				},
+				"description": "#### **Health Check Endpoint**\n\n- **URL**: `/health`\n    \n- **Method**: `GET`\n    \n- **Description**: Checks if the server is running.\n    \n- **Request Headers**: None\n    \n- **Request Body**: None\n    \n- **Response**:\n    \n    - **Status**: 200 OK\n        \n    - `\"Server is running!\"`"
+			},
+			"response": []
+		}
+	]
+}
