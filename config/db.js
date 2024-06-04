@@ -56,7 +56,12 @@ const connectDB = async () => {
             },
             {
                 role: user,
-                permissions: []
+                permissions: [
+                    get_user,
+                    post_user,
+                    put_user,
+                    delete_user,
+                ]
             },
         ]
 

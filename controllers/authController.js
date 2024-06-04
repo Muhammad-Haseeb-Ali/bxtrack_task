@@ -1,13 +1,8 @@
 const {ProfilesModel} = require('../models/Profiles')
-const Roles = require('../models/Roles');
 const generateToken = require('../utils/generateToken');
 
-const { 
-    passwordHash,
-    passwordCompare
-    } = require("../utils/passwordHash");
-const { super_admin, admin, user } = require('../constents/role&permissions');
-const { validatePassword } = require('../utils/validators');
+const { user } = require('../constents/role&permissions');
+const { roleMiddleware } = require('../middleware/roleMiddleware');
 
 const register = async (req, res) => {
     var { username, email, password } = req.body;
@@ -19,16 +14,13 @@ const register = async (req, res) => {
         })
     }
 
-    const userRole = await Roles.findOne({role: user})
+    const role = await roleMiddleware(user)
 
-    if(!userRole){
+    if(!role){
         return res.status(404).json({
             message: "User Role is deleted from db"
         })
     }
-
-    const role = userRole._id
-    password = await passwordHash(password)
 
     try {
         const profile = new ProfilesModel({ 
@@ -76,7 +68,6 @@ const login = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
-
 
 module.exports = {
     register,

@@ -2,8 +2,6 @@ const { user, super_admin } = require('../constents/role&permissions');
 const { roleMiddleware } = require('../middleware/roleMiddleware');
 const {ProfilesModel} = require('../models/Profiles')
 const Roles = require('../models/Roles');
-const { passwordHash } = require('../utils/passwordHash');
-const { validatePassword } = require('../utils/validators');
 
 const getAllUsers = async (req, res) => {
     try {
@@ -103,8 +101,10 @@ const updateUser = async (req, res) => {
     try {
         const {id} = req.params
         const role = req.body.role
+
+        const userRoleId = await roleMiddleware(user) 
     
-        const targetedProfile = await ProfilesModel.findById(id).populate("role")
+        const targetedProfile = await ProfilesModel.findOne({_id: id, role: userRoleId}).populate("role")
     
         if(!targetedProfile){
             return res.status(404)
@@ -113,7 +113,7 @@ const updateUser = async (req, res) => {
             })
         }
     
-        if(req.user == user && (req.user._id == targetedProfile._id)){
+        if(req.user.role.role == user && (req.user._id == targetedProfile._id)){
             return res.status(400)
             .json({
                 message: "Access Denied"
@@ -159,7 +159,23 @@ const updateUser = async (req, res) => {
 const deleteUser = async (req, res) => {
     const {id} = req.params
     try {
-        ProfilesModel.findByIdAndDelete({_id: id})
+        const role = await roleMiddleware(user)
+
+        if(!role){
+            return res.status(404)
+            .json({
+                message: user + " role does not exist in db"
+            })
+        }
+
+        if(req.user.role.role == user && req.user._id != id){
+            return res.status(400)
+            .json({
+                message: "you cannot delete other's account"
+            })
+        }
+
+        ProfilesModel.findOneAndDelete({_id: id , role})
         .then(()=>{
             return res.status(200)
             .json({

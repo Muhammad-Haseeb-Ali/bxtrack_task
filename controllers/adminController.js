@@ -32,16 +32,15 @@ const getAdmin = async (req, res) => {
     try {
         const {id} = req.params
 
-        const adminDoc = await ProfilesModel.findById(id).select('-password').populate({
+        const role = await roleMiddleware(admin)
+
+        const adminDoc = await ProfilesModel.findOne({_id: id, role}).select('-password').populate({
             path: 'role',
             select: 'role'
         });
 
-        if(
-            !adminDoc 
-            || adminDoc.role.role != admin 
-            || (req.user.role.role == admin && adminDoc._id != req.user._id)
-            ) {
+        if(!adminDoc || (req.user.role.role == admin && adminDoc._id != req.user._id)) {
+
             return res.status(404).json({
                 message: "Admin is not available with id: " + id
             })
@@ -102,15 +101,6 @@ const updateAdmin = async (req, res) => {
         const {id} = req.params
         const role = req.body.role
     
-        const targetedProfile = await ProfilesModel.findById(id).populate("role")
-    
-        if(!targetedProfile || targetedProfile?.role.role != admin){
-            return res.status(404)
-            .json({
-                message: "Admin Profile does not exist with id " + id
-            })
-        }
-    
     
         if(role){
             if(req.user.role.role != super_admin){
@@ -131,8 +121,10 @@ const updateAdmin = async (req, res) => {
             req.body.role = adminUpdatedRole
         }
 
+        const adminRoleId = await roleMiddleware(admin)
+
         const adminDoc = await ProfilesModel.findOneAndUpdate(
-            {_id: id}, 
+            {_id: id, role: adminRoleId}, 
             req.body, 
             { new: true 
         })
@@ -152,7 +144,16 @@ const deleteAdmin = async (req, res) => {
     try {
         const {id} = req.params
 
-        ProfilesModel.findByIdAndDelete({_id: id})
+        const role = await roleMiddleware(admin)
+
+        if(!role){
+            return res.status(404)
+            .json({
+                message: admin + " role does not exist in db"
+            })
+        }
+
+        ProfilesModel.findOneAndDelete({_id: id, role})
         .then(()=>{
             return res.status(200)
             .json({
