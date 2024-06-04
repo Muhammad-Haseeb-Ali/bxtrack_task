@@ -1,10 +1,12 @@
-const roleMiddleware = (requiredRole) => {
-    return (req, res, next) => {
-        if (req.user.role.name !== requiredRole) {
-            return res.status(403).json({ message: 'Access denied' });
-        }
-        next();
-    };
-};
+const Roles = require('../models/Roles');
 
-module.exports = roleMiddleware;
+async function roleMiddleware (role, req, res) {
+    console.log({role})
+    const roleDoc = await Roles.findOne({role})
+
+    return(roleDoc?._id)
+}
+
+module.exports = {
+    roleMiddleware
+}

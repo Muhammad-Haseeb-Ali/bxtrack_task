@@ -1,30 +1,77 @@
-// authController.js
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
-const Role = require('../models/Role');
+const {ProfilesModel} = require('../models/Profiles')
+const Roles = require('../models/Roles');
 const generateToken = require('../utils/generateToken');
 
+const { 
+    passwordHash,
+    passwordCompare
+    } = require("../utils/passwordHash");
+const { super_admin, admin, user } = require('../constents/role&permissions');
+const { validatePassword } = require('../utils/validators');
+
 const register = async (req, res) => {
-    const { username, email, password, role } = req.body;
+    var { username, email, password } = req.body;
+
+    if(!username || !email || !password){
+        return res.status(400)
+        .json({
+            message: "Req body is not valid"
+        })
+    }
+
+    const userRole = await Roles.findOne({role: user})
+
+    if(!userRole){
+        return res.status(404).json({
+            message: "User Role is deleted from db"
+        })
+    }
+
+    const role = userRole._id
+    password = await passwordHash(password)
+
     try {
-        const user = new User({ username, email, password: bcrypt.hashSync(password, 10), role });
-        await user.save();
-        res.status(201).json({ message: 'User registered successfully' });
+        const profile = new ProfilesModel({ 
+            username, 
+            email, 
+            password, 
+            role 
+        });
+
+        profile.save()
+        .then(profile=>{
+            return res.status(200)
+            .json({ message: 'User registered successfully' })
+        })
+        .catch(error=>{
+            return res.status(500)
+            .json({
+                message: error.message
+            })
+        })
+
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
 
 const login = async (req, res) => {
-    const { email, password } = req.body;
     try {
-        const user = await User.findOne({ email }).populate('role');
-        if (user && bcrypt.compareSync(password, user.password)) {
+        const { email, password } = req.body;
+
+        if(!email || !password){
+            return res.status(400).json({ message: 'Email and password is required' })
+        }
+
+        const user = await ProfilesModel.findOne({ email }).populate('role');
+
+        if (user && await user.checkPassword(password)) {
             res.json({ token: generateToken(user._id) });
-        } else {
+        } 
+        else {
             res.status(401).json({ message: 'Invalid credentials' });
         }
+
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

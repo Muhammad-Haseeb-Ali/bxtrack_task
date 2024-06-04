@@ -33,12 +33,16 @@ Business Logic:
     Roles: super_admin, admin, user, guest
     Permissions:
         super_admin: 
-            can:  read, add, update, remove the profiles of admins users
+            can:  read, add, update, remove the profiles of admins and users
         admin: 
             can: read, add, update, remove the users profiles
             can: read admin profiles
+        user:
+            can: create, read, update and remove profile
         guest:
             can: only check open routes like health check or static files
+
+I setuped roles' permissions on endpoint basis, we can handle permissions on multiple action types on single endpoint as well. See permissions code in config/db.js
 
 
 APIs:
